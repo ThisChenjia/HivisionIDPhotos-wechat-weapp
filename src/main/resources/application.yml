@@ -90,9 +90,11 @@ webset:
   #鉴黄API地址
   safetyDomain: http://121.62.63.137:3006/
   #证件照APi地址
-  zjzDomain: http://121.62.63.137:8399/
+#  zjzDomain: http://121.62.63.137:8399/
+  zjzDomain: http://127.0.0.1:8080/
   #智能抠图API地址
-  mattingDomain: http://121.62.63.137:8399/
+#  mattingDomain: http://121.62.63.137:8399/
+  mattingDomain: http://127.0.0.1:8080/
   #黑白图片上色API地址
   colourizeDomain: http://127.0.0.1/
   #动漫风图片API地址
