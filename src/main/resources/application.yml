@@ -98,7 +98,7 @@ webset:
   #黑白图片上色API地址
   colourizeDomain: http://127.0.0.1/
   #动漫风图片API地址
-  cartoonDomain: http://127.0.0.1/
+  cartoonDomain: https://blueberry.center/proxy/cartoon/
   #管理员登录二维码：正式版：release，体验版：trial，开发版：develop
   envVersion: trial
 

@@ -9,8 +9,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @EnableScheduling
 public class App {
     public static void main(String[] args) {
-        System.out.println("欢迎使用证件照伴侣服务");
         SpringApplication.run(App.class, args);
-        System.out.println("服务启动成功-当前版本：2025年第一个版本，新的开始，扬帆起航！");
+        System.out.println("小明证件照服务启动成功！");
     }
 }

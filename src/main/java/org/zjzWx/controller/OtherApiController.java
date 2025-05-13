@@ -7,6 +7,10 @@ import org.zjzWx.model.dto.ExploreDto;
 import org.zjzWx.service.OtherApiService;
 import org.zjzWx.util.R;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Base64;
+
 @RestController
 @RequestMapping("/otherApi")
 public class OtherApiController {
@@ -78,6 +82,32 @@ public class OtherApiController {
         return R.ok(editImage);
     }
 
+
+    /**
+     * 将图片路径的文件转成 base64 编码并调用卡通化接口
+     */
+    @GetMapping("/cartoonFromImagePath")
+    public R cartoonFromImagePath() {
+        try {
+            // 读取图片文件并编码为 Base64
+            byte[] imageBytes = Files.readAllBytes(Paths.get("D:\\Desktop\\壁纸\\20250428160045.jpg"));
+            String base64Image = Base64.getEncoder().encodeToString(imageBytes);
+
+            // 构造 ExploreDto
+            ExploreDto exploreDto = new ExploreDto();
+            exploreDto.setUserId(1);
+            exploreDto.setProcessedImage(base64Image);
+
+            // 调用服务层处理
+            String result = otherApiService.cartoon(exploreDto);
+            if (result == null) {
+                return R.no("图片制作失败，请重试");
+            }
+            return R.ok(result);
+        } catch (Exception e) {
+            return R.no("处理图片时发生错误: " + e.getMessage());
+        }
+    }
 
 
 }
