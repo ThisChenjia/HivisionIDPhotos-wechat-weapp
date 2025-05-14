@@ -96,7 +96,7 @@ webset:
 #  mattingDomain: http://121.62.63.137:8399/
   mattingDomain: http://127.0.0.1:8080/
   #黑白图片上色API地址
-  colourizeDomain: http://127.0.0.1/
+  colourizeDomain: https://blueberry.center/proxy/colourize/
   #动漫风图片API地址
   cartoonDomain: https://blueberry.center/proxy/cartoon/
   #管理员登录二维码：正式版：release，体验版：trial，开发版：develop

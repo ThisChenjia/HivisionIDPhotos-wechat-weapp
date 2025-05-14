@@ -90,16 +90,20 @@ public class OtherApiController {
     public R cartoonFromImagePath() {
         try {
             // 读取图片文件并编码为 Base64
-            byte[] imageBytes = Files.readAllBytes(Paths.get("D:\\Desktop\\壁纸\\20250428160045.jpg"));
+            byte[] imageBytes = Files.readAllBytes(Paths.get("D:\\Desktop\\20250514112525.jpg"));
+//            byte[] imageBytes = Files.readAllBytes(Paths.get("D:\\Desktop\\壁纸\\我的\\17471286343967.png"));
             String base64Image = Base64.getEncoder().encodeToString(imageBytes);
 
             // 构造 ExploreDto
             ExploreDto exploreDto = new ExploreDto();
             exploreDto.setUserId(1);
-            exploreDto.setProcessedImage(base64Image);
+//            exploreDto.setProcessedImage(base64Image);
+            //黑白图片上色的数据格式：前缀数据类型和编码方式  data:image/jpeg;base64,  后缀为图片的base64数据
+            exploreDto.setProcessedImage("data:image/jpeg;base64," +base64Image);
 
             // 调用服务层处理
-            String result = otherApiService.cartoon(exploreDto);
+//            String result = otherApiService.cartoon(exploreDto);
+            String result = otherApiService.colourize(exploreDto);
             if (result == null) {
                 return R.no("图片制作失败，请重试");
             }
