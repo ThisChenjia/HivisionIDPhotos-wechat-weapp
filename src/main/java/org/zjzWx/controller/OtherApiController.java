@@ -98,7 +98,6 @@ public class OtherApiController {
             ExploreDto exploreDto = new ExploreDto();
             exploreDto.setUserId(1);
 //            exploreDto.setProcessedImage(base64Image);
-            //黑白图片上色的数据格式：前缀数据类型和编码方式  data:image/jpeg;base64,  后缀为图片的base64数据
             exploreDto.setProcessedImage("data:image/jpeg;base64," +base64Image);
 
             // 调用服务层处理
