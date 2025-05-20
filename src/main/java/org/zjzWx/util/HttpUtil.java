@@ -39,8 +39,8 @@ public class HttpUtil {
 
     public static ResponseEntity<String> post(MultiValueMap<String, Object> requestBody,String type){
         HttpHeaders headers = new HttpHeaders();
+        String nonce = generateNonceByUUID();
         try {
-            String nonce = generateNonceByUUID();
             String timestamp = String.valueOf(System.currentTimeMillis());
             String sign = SignatureUtils.generateSignature(staticApiSecret, METHOD, type, timestamp, nonce, null, JSON.toJSONString(requestBody));
             headers.setContentType(MediaType.APPLICATION_JSON);
@@ -59,6 +59,7 @@ public class HttpUtil {
         HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(params, headers);
 
         RestTemplate restTemplate = new RestTemplate();
+        log.info("发起API调用请求，请求编码：{}",nonce);
         return restTemplate.exchange(
                 staticApiDomain,
                 HttpMethod.POST,
