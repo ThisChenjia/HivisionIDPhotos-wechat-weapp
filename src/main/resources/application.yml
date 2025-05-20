@@ -101,6 +101,9 @@ webset:
   cartoonDomain: https://blueberry.center/proxy/cartoon/
   #管理员登录二维码：正式版：release，体验版：trial，开发版：develop
   envVersion: trial
+  apiDomain: http://127.0.0.1:8092/api/v1/ai/
+  apiKey: api_a94eee954526406baa1d2ad2a1340bdf
+  apiSecret: tvyEC53pgxnLSONbcggQzLgCCUE7IIbv5PT5plE6UWsFkcCcgDO0NdcxvFhL9HAg
 
 
 #模型配置

@@ -16,6 +16,7 @@ import org.zjzWx.entity.Photo;
 import org.zjzWx.entity.PhotoRecord;
 import org.zjzWx.model.dto.*;
 import org.zjzWx.service.*;
+import org.zjzWx.util.HttpUtil;
 import org.zjzWx.util.PicUtil;
 import org.zjzWx.util.R;
 
@@ -133,21 +134,10 @@ public class OtherApiServiceImpl implements OtherApiService {
         try {
 
             //构建发起请求
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-
             MultiValueMap<String, Object> requestBody = new LinkedMultiValueMap<>();
             requestBody.add("base64_image", exploreDto.getProcessedImage());
 
-            HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(requestBody, headers);
-
-            RestTemplate restTemplate = new RestTemplate();
-            ResponseEntity<String> response = restTemplate.exchange(
-                    colourizeDomain+"colourizeImg",
-                    HttpMethod.POST,
-                    requestEntity,
-                    String.class);
-
+            ResponseEntity<String> response = HttpUtil.post(requestBody, "colourizeImg");
 
             ColourizeDto colourizeDto = JSON.parseObject(response.getBody(), ColourizeDto.class);
             if(null==colourizeDto && 2!=colourizeDto.getStatus()) {
@@ -335,20 +325,9 @@ public class OtherApiServiceImpl implements OtherApiService {
     public String cartoon(ExploreDto exploreDto) {
 
         try {
-            RestTemplate restTemplate = new RestTemplate();
-
-            // 构建 multipart 数据
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.APPLICATION_JSON);
-
-            HttpEntity<String> requestEntity = new HttpEntity<>("{\"image\": \"" + exploreDto.getProcessedImage() + "\"}", headers);
-
-            ResponseEntity<String> response = restTemplate.exchange(
-                    cartoonDomain + "/cartoon",
-                    HttpMethod.POST,
-                    requestEntity,
-                    String.class
-            );
+            MultiValueMap<String, Object> requestBody = new LinkedMultiValueMap<>();
+            requestBody.add("image", exploreDto.getProcessedImage());
+            ResponseEntity<String> response = HttpUtil.post(requestBody, "cartoon");
 
             CartoonDto cartoonDto = JSON.parseObject(response.getBody(), CartoonDto.class);
             if (cartoonDto == null || cartoonDto.getError() != null) {
