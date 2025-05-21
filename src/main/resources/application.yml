@@ -41,7 +41,6 @@ spring:
 mybatis-plus:
   mapper-locations: classpath:mapper/*.xml
   configuration:
-#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     auto-mapping-behavior: FULL
   global-config:
     banner: false #关闭mybatis-plus启动的LOGO
@@ -87,39 +86,18 @@ webset:
   directory: /www/wwwroot/zjzpic/pic
   #图片存储服务器域名
   picDomain: https://blueberry.center/serverImage/
-  #鉴黄API地址
-  safetyDomain: http://121.62.63.137:3006/
-  #证件照APi地址
-#  zjzDomain: http://121.62.63.137:8399/
-  zjzDomain: http://127.0.0.1:8080/
-  #智能抠图API地址
-#  mattingDomain: http://121.62.63.137:8399/
-  mattingDomain: http://127.0.0.1:8080/
-  #黑白图片上色API地址
-  colourizeDomain: https://blueberry.center/proxy/colourize/
-  #动漫风图片API地址
-  cartoonDomain: https://blueberry.center/proxy/cartoon/
   #管理员登录二维码：正式版：release，体验版：trial，开发版：develop
   envVersion: trial
+  #API请求地址
   apiDomain: http://127.0.0.1:8092/api/v1/ai/
+  #API_KEY
   apiKey: api_a94eee954526406baa1d2ad2a1340bdf
+  #API_SECRET 密钥，请不要泄露
   apiSecret: tvyEC53pgxnLSONbcggQzLgCCUE7IIbv5PT5plE6UWsFkcCcgDO0NdcxvFhL9HAg
 
 
-#模型配置
+#模型配置 注意：不要动
 modelset:
-
-  #重要的事情说3遍！！！
-  #两者不同搭配的效果和速度都不一样，如果你不知道这是干嘛的，请不要动
-  #两者不同搭配的效果和速度都不一样，如果你不知道这是干嘛的，请不要动
-  #两者不同搭配的效果和速度都不一样，如果你不知道这是干嘛的，请不要动
-
-  #人像分割模型 - 可选值：modnet_photographic_portrait_matting | hivision_modnet | rmbg-1.4 | birefnet-v1-lite
   humanMattingModel: hivision_modnet
-  #人脸检测模型 - 可选值：mtcnn | retinaface-resnet50
   faceDetectModel: mtcnn
-  #智能抠图模型 - 可选值：modnet_photographic_portrait_matting | hivision_modnet | rmbg-1.4 | birefnet-v1-lite
   mattingModel: birefnet-v1-lite
-  #智能抠图模型说明：
-  #birefnet-v1-lite的效果最好，也最慢，占用内存最大
-  #如果你自已部署了API但是服务器带不动，请更换官方的智能抠图API地址 或 更换智能抠图模型

@@ -36,20 +36,8 @@ public class OtherApiServiceImpl implements OtherApiService {
     @Value("${webset.picDomain}")
     private String picDomain;
 
-    @Value("${webset.mattingDomain}")
-    private String mattingDomain;
-
-    @Value("${webset.zjzDomain}")
-    private String zjzDomain;
-
-    @Value("${webset.colourizeDomain}")
-    private String colourizeDomain;
-
     @Value("${modelset.mattingModel}")
     private String mattingModel;
-
-    @Value("${webset.cartoonDomain}")
-    private String cartoonDomain;
 
     @Autowired
     private PhotoService photoService;

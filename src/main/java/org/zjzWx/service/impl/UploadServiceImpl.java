@@ -25,10 +25,6 @@ import java.util.Base64;
 public class UploadServiceImpl implements UploadService {
 
 
-    @Value("${webset.safetyDomain}")
-    private String safetyDomain;
-
-
     @Override
     public String checkNsfw(MultipartFile multipartFile) {
 

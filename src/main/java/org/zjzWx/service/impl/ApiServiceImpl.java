@@ -28,8 +28,6 @@ import java.util.Date;
 @Slf4j
 public class ApiServiceImpl implements ApiService {
 
-    @Value("${webset.zjzDomain}")
-    private String zjzDomain;
     @Value("${webset.directory}")
     private String directory;
     @Value("${webset.picDomain}")
@@ -191,17 +189,9 @@ public class ApiServiceImpl implements ApiService {
 
 
         try {
-            RestTemplate restTemplate = new RestTemplate();
-
-            // 构建 multipart 数据
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
             MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-            MultipartFile multipartFile = PicUtil.base64ToMultipartFile(createPhotoDto.getImage());
-            body.add("input_image", new PicUtil.MultipartInputStreamFileResource(multipartFile));
-//            新版本HivisionIDPhotos的input_image_base64限制了1M，暂时停止使用base64传输
-//            body.add("input_image_base64", createPhotoDto.getImage());
+            body.add("input_image", createPhotoDto.getImage());
             body.add("height",createPhotoDto.getHeight());
             body.add("width", createPhotoDto.getWidth());
             body.add("human_matting_model",humanMattingModel);
@@ -219,15 +209,14 @@ public class ApiServiceImpl implements ApiService {
                 }
             }
 
-            HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
-
-            ResponseEntity<String> response = restTemplate.exchange(
-                    zjzDomain+"/idphoto",
-                    HttpMethod.POST,
-                    requestEntity,
-                    String.class);
-
-            HivisionDto hivisionDto = JSON.parseObject(response.getBody(), HivisionDto.class);
+            ResponseEntity<String> response = HttpUtil.post(body, "idphoto");
+            R r = JSON.parseObject(response.getBody(), R.class);
+            if (r != null && !r.getCode().equals(200)) {
+                picVo.setMsg("服务器繁忙，请稍后重试！");
+                log.error("生成高清证件照失败：" + r.getMsg());
+                return picVo;
+            }
+            HivisionDto hivisionDto = JSON.parseObject(String.valueOf(r.getData()), HivisionDto.class);
             if(!hivisionDto.isStatus()){
                 picVo.setMsg("未检测到人脸或多人脸");
                 return picVo;
