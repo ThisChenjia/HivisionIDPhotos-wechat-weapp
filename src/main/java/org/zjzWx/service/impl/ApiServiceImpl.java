@@ -2,6 +2,7 @@ package org.zjzWx.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -16,6 +17,7 @@ import org.zjzWx.model.dto.CreatePhotoDto;
 import org.zjzWx.model.dto.HivisionDto;
 import org.zjzWx.model.vo.PicVo;
 import org.zjzWx.service.*;
+import org.zjzWx.util.HttpUtil;
 import org.zjzWx.util.PicUtil;
 import org.zjzWx.util.R;
 
@@ -23,6 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 @Service
+@Slf4j
 public class ApiServiceImpl implements ApiService {
 
     @Value("${webset.zjzDomain}")
@@ -86,17 +89,9 @@ public class ApiServiceImpl implements ApiService {
 
 
         try {
-            RestTemplate restTemplate = new RestTemplate();
-
-            // 构建 multipart 数据
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
             MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-            MultipartFile multipartFile = PicUtil.base64ToMultipartFile(createPhotoDto.getImage());
-            body.add("input_image", new PicUtil.MultipartInputStreamFileResource(multipartFile));
-//            新版本HivisionIDPhotos的input_image_base64限制了1M，暂时停止使用base64传输
-//            body.add("input_image_base64", createPhotoDto.getImage());
+            body.add("input_image", createPhotoDto.getImage());
             body.add("height",createPhotoDto.getHeight());
             body.add("width", createPhotoDto.getWidth());
             body.add("dpi",createPhotoDto.getDpi());
@@ -116,15 +111,14 @@ public class ApiServiceImpl implements ApiService {
 
             }
 
-            HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
-
-            ResponseEntity<String> response = restTemplate.exchange(
-                    zjzDomain+"/idphoto",
-                    HttpMethod.POST,
-                    requestEntity,
-                    String.class);
-
-            HivisionDto hivisionDto = JSON.parseObject(response.getBody(), HivisionDto.class);
+            ResponseEntity<String> response = HttpUtil.post(body, "createIdPhoto");
+            R r = JSON.parseObject(response.getBody(), R.class);
+            if (r != null && !r.getCode().equals(200)) {
+                picVo.setMsg("服务器繁忙，请稍后重试！");
+                log.error("生成证件照失败：" + r.getMsg());
+                return picVo;
+            }
+            HivisionDto hivisionDto = JSON.parseObject(String.valueOf(r.getData()), HivisionDto.class);
             if(!hivisionDto.isStatus()){
                 picVo.setMsg("未检测到人脸或多人脸");
                 return picVo;
@@ -263,17 +257,9 @@ public class ApiServiceImpl implements ApiService {
     public PicVo updateIdPhoto(CreatePhotoDto createPhotoDto) {
         PicVo picVo = new PicVo();
         try {
-            RestTemplate restTemplate = new RestTemplate();
-
-            // 构建 multipart 数据
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-
+;
             MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-            MultipartFile multipartFile = PicUtil.base64ToMultipartFile(createPhotoDto.getImage());
-            body.add("input_image", new PicUtil.MultipartInputStreamFileResource(multipartFile));
-//            新版本HivisionIDPhotos的input_image_base64限制了1M，暂时停止使用base64传输
-//            body.add("input_image_base64", createPhotoDto.getImage());
+            body.add("input_image", createPhotoDto.getImage());
             body.add("render",createPhotoDto.getRender());
             body.add("color",createPhotoDto.getColors());
             //非高清下载时传输dpi
@@ -285,18 +271,14 @@ public class ApiServiceImpl implements ApiService {
                 body.add("kb",createPhotoDto.getKb());
             }
 
-
-
-            HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
-
-            ResponseEntity<String> response = restTemplate.exchange(
-                    zjzDomain+"/add_background",
-                    HttpMethod.POST,
-                    requestEntity,
-                    String.class);
-
-
-            HivisionDto hivisionDto = JSON.parseObject(response.getBody(), HivisionDto.class);
+            ResponseEntity<String> response = HttpUtil.post(body, "updateIdPhoto");
+            R r = JSON.parseObject(response.getBody(), R.class);
+            if (r != null && !r.getCode().equals(200)) {
+                picVo.setMsg("服务器繁忙，请稍后重试！");
+                log.error("生成证件照失败：" + r.getMsg());
+                return picVo;
+            }
+            HivisionDto hivisionDto = JSON.parseObject(String.valueOf(r.getData()), HivisionDto.class);
             if(!hivisionDto.isStatus()){
                 picVo.setMsg("未检测到人脸或多人脸");
                 return picVo;

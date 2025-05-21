@@ -2,6 +2,7 @@ package org.zjzWx.service.impl;
 
 import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -26,6 +27,7 @@ import java.util.List;
 
 
 @Service
+@Slf4j
 public class OtherApiServiceImpl implements OtherApiService {
 
     @Value("${webset.directory}")
@@ -138,8 +140,12 @@ public class OtherApiServiceImpl implements OtherApiService {
             requestBody.add("base64_image", exploreDto.getProcessedImage());
 
             ResponseEntity<String> response = HttpUtil.post(requestBody, "colourizeImg");
-
-            ColourizeDto colourizeDto = JSON.parseObject(response.getBody(), ColourizeDto.class);
+            R r = JSON.parseObject(response.getBody(), R.class);
+            if (r != null && !r.getCode().equals(200)) {
+                log.error("调用老照片上色API发生错误:{}",r.getMsg());
+                return null;
+            }
+            ColourizeDto colourizeDto = JSON.parseObject(String.valueOf(r.getData()), ColourizeDto.class);
             if(null==colourizeDto && 2!=colourizeDto.getStatus()) {
                 return null;
             }
@@ -183,32 +189,21 @@ public class OtherApiServiceImpl implements OtherApiService {
     public String matting(ExploreDto exploreDto) {
         try {
 
-            RestTemplate restTemplate = new RestTemplate();
-
-            // 构建 multipart 数据
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
 
             MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-            MultipartFile multipartFile = PicUtil.base64ToMultipartFile(exploreDto.getProcessedImage());
-            body.add("input_image", new PicUtil.MultipartInputStreamFileResource(multipartFile));
+            body.add("input_image", exploreDto.getProcessedImage());
             body.add("human_matting_model",mattingModel);
             if(null!=exploreDto.getDpi()){
                 body.add("dpi",exploreDto.getDpi()); //代表用户输入了dpi
             }
 
-
-
-            HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
-
-            ResponseEntity<String> response = restTemplate.exchange(
-                    mattingDomain+"/human_matting",
-                    HttpMethod.POST,
-                    requestEntity,
-                    String.class);
-
-
-            HivisionDto hivisionDto = JSON.parseObject(response.getBody(), HivisionDto.class);
+            ResponseEntity<String> response = HttpUtil.post(body, "matting");
+            R r = JSON.parseObject(response.getBody(), R.class);
+            if (r != null && !r.getCode().equals(200)) {
+                log.error("调用智能抠图API发生错误:{}",r.getMsg());
+                return null;
+            }
+            HivisionDto hivisionDto = JSON.parseObject(String.valueOf(r.getData()), HivisionDto.class);
             if(!hivisionDto.isStatus()){
                 return null;
             }
@@ -250,17 +245,8 @@ public class OtherApiServiceImpl implements OtherApiService {
     public String generateLayoutPhotos(ExploreDto exploreDto) {
         try {
 
-            RestTemplate restTemplate = new RestTemplate();
-
-            // 构建 multipart 数据
-            HttpHeaders headers = new HttpHeaders();
-            headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-
             MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-            MultipartFile multipartFile = PicUtil.base64ToMultipartFile(exploreDto.getProcessedImage());
-            body.add("input_image", new PicUtil.MultipartInputStreamFileResource(multipartFile));
-//            新版本HivisionIDPhotos的input_image_base64限制了1M，暂时停止使用base64传输
-//            body.add("input_image_base64",exploreDto.getProcessedImage());
+            body.add("input_image", exploreDto.getProcessedImage());
             if(null!=exploreDto.getHeight()){
                 body.add("height",exploreDto.getHeight());  //代表用户输入了高度
             }
@@ -274,16 +260,13 @@ public class OtherApiServiceImpl implements OtherApiService {
                 body.add("dpi",exploreDto.getDpi());  //代表用户输入了kb
             }
 
-            HttpEntity<MultiValueMap<String, Object>> requestEntity = new HttpEntity<>(body, headers);
-
-            ResponseEntity<String> response = restTemplate.exchange(
-                    zjzDomain+"/generate_layout_photos",
-                    HttpMethod.POST,
-                    requestEntity,
-                    String.class);
-
-
-            HivisionDto hivisionDto = JSON.parseObject(response.getBody(), HivisionDto.class);
+            ResponseEntity<String> response = HttpUtil.post(body, "generateLayoutPhotos");
+            R r = JSON.parseObject(response.getBody(), R.class);
+            if (r != null && !r.getCode().equals(200)) {
+                log.error("调用六寸排版照API发生错误:{}",r.getMsg());
+                return null;
+            }
+            HivisionDto hivisionDto = JSON.parseObject(String.valueOf(r.getData()), HivisionDto.class);
             if(!hivisionDto.isStatus()){
                 return null;
             }
@@ -328,8 +311,12 @@ public class OtherApiServiceImpl implements OtherApiService {
             MultiValueMap<String, Object> requestBody = new LinkedMultiValueMap<>();
             requestBody.add("image", exploreDto.getProcessedImage());
             ResponseEntity<String> response = HttpUtil.post(requestBody, "cartoon");
-
-            CartoonDto cartoonDto = JSON.parseObject(response.getBody(), CartoonDto.class);
+            R r = JSON.parseObject(response.getBody(), R.class);
+            if (r != null && !r.getCode().equals(200)) {
+                log.error("调用动漫风滤镜API发生错误:{}",r.getMsg());
+                return null;
+            }
+            CartoonDto cartoonDto = JSON.parseObject(String.valueOf(r.getData()), CartoonDto.class);
             if (cartoonDto == null || cartoonDto.getError() != null) {
                 return null;
             }
