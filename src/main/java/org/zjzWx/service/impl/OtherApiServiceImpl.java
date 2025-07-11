@@ -36,9 +36,6 @@ public class OtherApiServiceImpl implements OtherApiService {
     @Value("${webset.picDomain}")
     private String picDomain;
 
-    @Value("${modelset.mattingModel}")
-    private String mattingModel;
-
     @Autowired
     private PhotoService photoService;
     @Autowired
@@ -180,7 +177,6 @@ public class OtherApiServiceImpl implements OtherApiService {
 
             MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
             body.add("input_image", exploreDto.getProcessedImage());
-            body.add("human_matting_model",mattingModel);
             if(null!=exploreDto.getDpi()){
                 body.add("dpi",exploreDto.getDpi()); //代表用户输入了dpi
             }

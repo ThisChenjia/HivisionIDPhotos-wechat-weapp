@@ -33,12 +33,6 @@ public class ApiServiceImpl implements ApiService {
     @Value("${webset.picDomain}")
     private String picDomain;
 
-    @Value("${modelset.humanMattingModel}")
-    private String humanMattingModel;
-    @Value("${modelset.faceDetectModel}")
-    private String faceDetectModel;
-
-
     @Autowired
     private CustomService customService;
     @Autowired
@@ -93,8 +87,8 @@ public class ApiServiceImpl implements ApiService {
             body.add("height",createPhotoDto.getHeight());
             body.add("width", createPhotoDto.getWidth());
             body.add("dpi",createPhotoDto.getDpi());
-            body.add("human_matting_model",humanMattingModel);
-            body.add("face_detect_model",faceDetectModel);
+//            body.add("human_matting_model",humanMattingModel);
+//            body.add("face_detect_model",faceDetectModel);
             body.add("hd",false);  //减少时间，初始化时不生成高清
             body.add("face_alignment",true);  //人脸对齐
             if(createPhotoDto.getIsBeautyOn()==1){ //使用美颜
@@ -109,7 +103,7 @@ public class ApiServiceImpl implements ApiService {
 
             }
 
-            ResponseEntity<String> response = HttpUtil.post(body, "createIdPhoto");
+            ResponseEntity<String> response = HttpUtil.post(body, "idphoto");
             R r = JSON.parseObject(response.getBody(), R.class);
             if (r != null && !r.getCode().equals(200)) {
                 picVo.setMsg("服务器繁忙，请稍后重试！");
@@ -194,10 +188,6 @@ public class ApiServiceImpl implements ApiService {
             body.add("input_image", createPhotoDto.getImage());
             body.add("height",createPhotoDto.getHeight());
             body.add("width", createPhotoDto.getWidth());
-            body.add("human_matting_model",humanMattingModel);
-            body.add("face_detect_model",faceDetectModel);
-            body.add("hd",true);
-            body.add("face_alignment",true);  //人脸对齐
             if(createPhotoDto.getIsBeautyOn()==1){ //使用美颜
                 AppSet appSet = appSetService.getById(2);
                 if(appSet.getStatus()==1){  //管理员开启了美颜才能使用美颜，防止抓接口
@@ -260,7 +250,7 @@ public class ApiServiceImpl implements ApiService {
                 body.add("kb",createPhotoDto.getKb());
             }
 
-            ResponseEntity<String> response = HttpUtil.post(body, "updateIdPhoto");
+            ResponseEntity<String> response = HttpUtil.post(body, "add_background");
             R r = JSON.parseObject(response.getBody(), R.class);
             if (r != null && !r.getCode().equals(200)) {
                 picVo.setMsg("服务器繁忙，请稍后重试！");

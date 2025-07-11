@@ -33,7 +33,7 @@ public class UploadServiceImpl implements UploadService {
             MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
             body.add("file",new PicUtil.MultipartInputStreamFileResource(multipartFile));
 
-            ResponseEntity<String> response = HttpUtil.post(body, "checkNsfw");
+            ResponseEntity<String> response = HttpUtil.post(body, "checkImg");
             R r = JSON.parseObject(response.getBody(), R.class);
             if (r != null && !r.getCode().equals(200)) {
                 log.error("调用鉴黄API发生错误:{}",r.getMsg());
