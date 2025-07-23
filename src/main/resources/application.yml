@@ -33,10 +33,10 @@ spring:
     name: zjzYun
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://118.25.16.206:55317/photo?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
-    username: photo_dev
+    url: jdbc:mysql://8.136.106.91:55213/photo-admin?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: photo-admin-dev
     #如果你的密码是纯数字，需要用""包起来，不是纯数字不用
-    password: G5RtWTPmEDaHA28s
+    password: PbBhkdKaLMddtsTw
 
 mybatis-plus:
   mapper-locations: classpath:mapper/*.xml
@@ -91,13 +91,7 @@ webset:
   #API请求地址
   apiDomain: http://127.0.0.1:8092/api/v1/ai/
   #API_KEY
-  apiKey: api_a94eee954526406baa1d2ad2a1340bdf
+  apiKey: api_ccba9171ee75437eb2c55c4f3437d3d1
   #API_SECRET 密钥，请不要泄露
-  apiSecret: tvyEC53pgxnLSONbcggQzLgCCUE7IIbv5PT5plE6UWsFkcCcgDO0NdcxvFhL9HAg
+  apiSecret: 9phgGxXAjGZ49dyCRLL902euGZh0DCLK8rtL9B7EpeaPIi5LUePtXr7V77vxosd2
 
-
-#模型配置 注意：不要动
-modelset:
-  humanMattingModel: hivision_modnet
-  faceDetectModel: mtcnn
-  mattingModel: birefnet-v1-lite
