@@ -1,5 +1,5 @@
 server:
-  port: 8010
+  port: 8072
 
 spring:
   servlet:
@@ -8,29 +8,20 @@ spring:
       max-request-size: 100MB
   # redis配置
   redis:
-    # Redis数据库索引
     database: 3
     # Redis服务器地址
     host: 127.0.0.1
     # Redis服务器连接端口
     port: 6379
     # Redis服务器连接密码
-    password:
-    # 连接超时时间
+    password: DEV@test2024
     timeout: 10s
     lettuce:
       pool:
-        # 连接池最大连接数
         max-active: 10000
-        # 连接池最大阻塞等待时间（使用负值表示没有限制）
         max-wait: -1ms
-        # 连接池中的最大空闲连接
         max-idle: 10
-        # 连接池中的最小空闲连接
         min-idle: 0
-
-  application:
-    name: zjzYun
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://8.136.106.91:55213/photo-admin?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
@@ -44,11 +35,6 @@ mybatis-plus:
     auto-mapping-behavior: FULL
   global-config:
     banner: false #关闭mybatis-plus启动的LOGO
-
-
-
-
-
 
 ############## Sa-Token 配置 (此处无需动任何东西) ##############
 sa-token:
@@ -80,16 +66,16 @@ sa-token:
   is-print: off
 
 
-#系统配置
+#api接口-配置
 webset:
-  #图片路径
-  directory: /www/wwwroot/zjzpic/pic
-  #图片存储服务器域名
-  picDomain: https://blueberry.center/serverImage/
+  #图片路径（保存到本地的文件夹路径）
+  directory: /data/image/photo-admin
+  #图片访问域名（需要配置代理到图片路径，图片资源方可访问）
+  picDomain: https://luckylady.top/serverImage/photo-admin/
   #管理员登录二维码：正式版：release，体验版：trial，开发版：develop
   envVersion: trial
   #API请求地址
-  apiDomain: http://127.0.0.1:8092/api/v1/ai/
+  apiDomain: https://luckylady.top/proxy/api/v1/ai/
   #API_KEY
   apiKey: api_ccba9171ee75437eb2c55c4f3437d3d1
   #API_SECRET 密钥，请不要泄露

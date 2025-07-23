@@ -124,7 +124,6 @@
                 <version>2.7.2</version>
                 <configuration>
                     <mainClass>org.zjzWx.App</mainClass>
-                    <outputDirectory>D:/jar2</outputDirectory>
                     <layout>ZIP</layout>
                 </configuration>
                 <executions>
