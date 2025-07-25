@@ -59,7 +59,7 @@ public class HttpUtil {
         HttpEntity<Map<String, Object>> requestEntity = new HttpEntity<>(params, headers);
 
         RestTemplate restTemplate = new RestTemplate();
-        log.info("发起API调用请求，请求编码：{}",nonce);
+        log.info("发起API调用请求：{},时间：{}，请求编码：{}",type,System.currentTimeMillis(),nonce);
         return restTemplate.exchange(
                 staticApiDomain,
                 HttpMethod.POST,

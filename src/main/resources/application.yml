@@ -75,7 +75,7 @@ webset:
   #管理员登录二维码：正式版：release，体验版：trial，开发版：develop
   envVersion: trial
   #API请求地址
-  apiDomain: https://luckylady.top/proxy/api/v1/ai/
+  apiDomain: http://127.0.0.1:8092/api/v1/ai/
   #API_KEY
   apiKey: api_ccba9171ee75437eb2c55c4f3437d3d1
   #API_SECRET 密钥，请不要泄露
