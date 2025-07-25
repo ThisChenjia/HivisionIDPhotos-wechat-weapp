@@ -31,7 +31,8 @@ public class UploadServiceImpl implements UploadService {
 
         try {
             MultiValueMap<String, Object> body = new LinkedMultiValueMap<>();
-            body.add("file",new PicUtil.MultipartInputStreamFileResource(multipartFile));
+            String imageToBase64 = imageToBase64(multipartFile);
+            body.add("file",imageToBase64);
 
             ResponseEntity<String> response = HttpUtil.post(body, "checkImg");
             R r = JSON.parseObject(response.getBody(), R.class);
@@ -41,7 +42,7 @@ public class UploadServiceImpl implements UploadService {
             }
             // 解析JSON获取鉴黄结果
             ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode jsonNode = objectMapper.readTree(response.getBody());
+            JsonNode jsonNode = objectMapper.readTree(r.getData().toString());
             String code = jsonNode.get("code").asText();
             if(code.equals("0")){
                 return null;
@@ -83,6 +84,30 @@ public class UploadServiceImpl implements UploadService {
         }
     }
 
+
+    private String imageToBase64(MultipartFile file) {
+        try {
+
+            String originalFilename = file.getOriginalFilename();
+            // 直接获取文件内容
+            byte[] fileContent = file.getBytes();
+
+            // 进行Base64编码
+            String base64Image = Base64.getEncoder().encodeToString(fileContent);
+
+            // 拼接完整的Base64图片URI
+            String imagePrefix = "";
+            if (originalFilename.toLowerCase().endsWith(".png")) {
+                imagePrefix = "data:image/png;base64,";
+            } else if (originalFilename.toLowerCase().endsWith(".jpg") || originalFilename.toLowerCase().endsWith(".jpeg")) {
+                imagePrefix = "data:image/jpeg;base64,";
+            }
+
+            return imagePrefix + base64Image;
+        } catch (IOException e) {
+            throw new RuntimeException("图片识别失败，请重试");
+        }
+    }
 
 
 
